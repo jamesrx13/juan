@@ -1,0 +1,1 @@
+{"version":3,"sources":["pages/components/loader.scss"],"names":[],"mappings":"AAEA,mBACI,WACA,aACA","file":"loader.css","sourcesContent":["@import '../../variables';\r\n\r\n.loading-container {\r\n    width: 100%;\r\n    display: flex;\r\n    justify-content: center;\r\n}"]}
