@@ -10,7 +10,7 @@ const request = (method, url, data = {}) => {
       },
     };
 
-    if (method == "POST") {
+    if (method != "GET") {
       body.body = JSON.stringify(data);
     }
 

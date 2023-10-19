@@ -11,15 +11,10 @@ import { ReportsView } from "./views/Reports";
 import { getSessionUserData, isAdmin, logout } from "../statics/core/utils";
 import { useNavigate } from "react-router-dom";
 
-
 export const AppPage = () => {
   const [view, setView] = useState(HomeView);
 
-
   const navigate = useNavigate();
-
-
-
 
   const ref = useRef();
 
@@ -71,7 +66,10 @@ export const AppPage = () => {
           <h3>Are you sure you want to logout?</h3>
           <br />
           <br />
-          <button className="yes" onClick={() => (logout(), navigate("/login"))}>
+          <button
+            className="yes"
+            onClick={() => (logout(), navigate("/login"))}
+          >
             Yes
           </button>
           <button

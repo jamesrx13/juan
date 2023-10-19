@@ -7,9 +7,10 @@ import {
 } from "../../statics/core/config";
 import { request } from "../../statics/core/utils";
 
-const login = (formEvt) => {
+const login = (formEvt, setLoginStatus = () => {}) => {
   formEvt.preventDefault();
   const dataObj = Object.fromEntries(new FormData(formEvt.target));
+  setLoginStatus(true);
 
   request("POST", API_MAIN_URL + "login/", dataObj)
     .then((resp) => {
@@ -18,11 +19,15 @@ const login = (formEvt) => {
       localStorage.setItem(USER_SESSION_NAME, JSON.stringify(resp));
       window.dispatchEvent(new Event(AUTH_EVENT));
       toast.success("Login successful");
-      window.location.href = "/";
-
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
     })
     .catch((err) => {
       toast.error(err.message);
+    })
+    .finally(() => {
+      setLoginStatus(false);
     });
 };
 

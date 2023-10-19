@@ -7,9 +7,12 @@ import { inputFocus } from "./logic/Inputs";
 
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { CiMail } from "react-icons/ci";
+import { Box, CircularProgress } from "@mui/material";
 
 export const LoginPage = () => {
   const [viewPass, setViewPass] = useState("password");
+
+  const [authState, setAuthState] = useState(false);
 
   return (
     <main className="login">
@@ -19,7 +22,7 @@ export const LoginPage = () => {
           <span>Insert your email and password to login</span>
         </div>
 
-        <form onSubmit={login} method="POST">
+        <form onSubmit={(e) => login(e, setAuthState)} method="POST">
           <div className="input-grup">
             <label htmlFor="email">Email</label>
             <div className="input-icon">
@@ -61,7 +64,15 @@ export const LoginPage = () => {
             </div>
           </div>
           <br />
-          <button type="submit">Login</button>
+          <button disabled={authState} type="submit">
+            {!authState ? (
+              <>Login</>
+            ) : (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress size={25} />
+              </Box>
+            )}
+          </button>
         </form>
 
         <p>Developer by Juanesxz</p>
