@@ -1,14 +1,20 @@
 import { AUTH_EVENT, AUTH_JWT_NAME, USER_SESSION_NAME } from "./config";
 
-const request = (method, url, data) => {
+const request = (method, url, data = {}) => {
   return new Promise((resolve, reject) => {
-    fetch(url, {
+    const body = {
       method,
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": localStorage.getItem(AUTH_JWT_NAME),
       },
-      body: data ? JSON.stringify(data) : undefined,
-    })
+    };
+
+    if (method == "POST") {
+      body.body = JSON.stringify(data);
+    }
+
+    fetch(url, body)
       .then((resp) => {
         if (resp.status == 200) {
           resolve(resp.json());
