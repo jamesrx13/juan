@@ -17,6 +17,9 @@ const login = (formEvt) => {
       resp.token = undefined;
       localStorage.setItem(USER_SESSION_NAME, JSON.stringify(resp));
       window.dispatchEvent(new Event(AUTH_EVENT));
+      toast.success("Login successful");
+      window.location.href = "/";
+
     })
     .catch((err) => {
       toast.error(err.message);

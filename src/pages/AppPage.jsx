@@ -1,37 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import { useRef, useState } from "react";
 import "../statics/css/pages/app.css";
-
 import { AiOutlineUser, AiOutlineBarChart } from "react-icons/ai";
 import { RxExit } from "react-icons/rx";
 import { BiHomeAlt2 } from "react-icons/bi";
 import { LiaUsersSolid } from "react-icons/lia";
-
 import { AnimatedModal, ModalAnimation } from "@dorbus/react-animated-modal";
-
 import { HomeView } from "./views/Home";
 import { WorkersView } from "./views/Workers";
 import { ReportsView } from "./views/Reports";
 import { getSessionUserData, isAdmin, logout } from "../statics/core/utils";
-import { getWorkers } from "./services/WorkerServices";
+import { useNavigate } from "react-router-dom";
+
 
 export const AppPage = () => {
   const [view, setView] = useState(HomeView);
 
-  const [workerData, setWorkerData] = useState([]);
+
+  const navigate = useNavigate();
+
+
+
 
   const ref = useRef();
 
   const { username, placerole } = getSessionUserData();
-
-  useEffect(() => {
-    getDataWorkerView();
-  }, []);
-
-  const getDataWorkerView = async () => {
-    const data = await getWorkers();
-    setWorkerData(data);
-  };
 
   return (
     <main className="app">
@@ -48,20 +40,15 @@ export const AppPage = () => {
         <div className="options">
           {isAdmin() ? (
             <>
-              <div onClick={() => setView(HomeView)} className="item">
+              <div onClick={() => setView(<HomeView />)} className="item">
                 <BiHomeAlt2 />
                 <span>Home</span>
               </div>
-              <div
-                onClick={() =>
-                  setView(<WorkersView workersInformation={workerData} />)
-                }
-                className="item"
-              >
+              <div onClick={() => setView(<WorkersView />)} className="item">
                 <LiaUsersSolid />
                 <span>Workers</span>
               </div>
-              <div onClick={() => setView(ReportsView)} className="item">
+              <div onClick={() => setView(<ReportsView />)} className="item">
                 <AiOutlineBarChart />
                 <span>Reports</span>
               </div>
@@ -84,7 +71,7 @@ export const AppPage = () => {
           <h3>Are you sure you want to logout?</h3>
           <br />
           <br />
-          <button className="yes" onClick={() => logout()}>
+          <button className="yes" onClick={() => (logout(), navigate("/login"))}>
             Yes
           </button>
           <button

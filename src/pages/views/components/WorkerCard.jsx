@@ -1,27 +1,39 @@
-import React from "react";
+import { } from "react";
 
 import { AiOutlineUser } from "react-icons/ai";
+import { LoadingComponent } from "./Loading";
 
-export const WorkerCard = () => {
+export const WorkerCard = ({ data }) => {
+  // console.log(data.length);
+
   return (
-    <div className="worker-card">
-      <div className="image">
-        <AiOutlineUser fontSize={"1.5rem"} />
-      </div>
-      <ul>
-        <li>
-          <span>Name:</span> user
-        </li>
-        <li>
-          <span>Lastname:</span> name
-        </li>
-        <li>
-          <span>Email:</span> email@example
-        </li>
-        <li>
-          <span>Username:</span> username
-        </li>
-      </ul>
-    </div>
+    <>
+      {data.length === 0 ? (
+        <LoadingComponent />
+      ) :
+        (
+          data.map((worker, index) => (
+            <div key={index} className="worker-card">
+              <div className="image">
+                <AiOutlineUser fontSize={"1.5rem"} />
+              </div>
+              <ul>
+                <li>
+                  <span>Name:</span> {worker.name}
+                </li>
+                <li>
+                  <span>Lastname:</span> {worker.lastname}
+                </li>
+                <li>
+                  <span>Email:</span> {worker.email}
+                </li>
+                <li>
+                  <span>Username:</span> {worker.username}
+                </li>
+              </ul>
+            </div>
+          )))}
+
+    </>
   );
 };
