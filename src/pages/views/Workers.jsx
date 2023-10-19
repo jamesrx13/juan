@@ -1,19 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { WorkerCard } from "./components/WorkerCard";
-
-import { getWorkers } from "../services/WorkerServices";
-import { LoadingComponent } from "./components/Loading";
-
-export const WorkersView = async () => {
-  useEffect(() => {
-    hookGetWorkers();
-  });
-
-  const hookGetWorkers = async () => {
-    getWorkers();
-  };
-
+export const WorkersView = ({ workersInformation }) => {
+  console.log(workersInformation);
   return (
     <section className="workers-view">
       <h1>List Workers</h1>

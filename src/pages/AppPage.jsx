@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "../statics/css/pages/app.css";
 
@@ -13,13 +13,25 @@ import { HomeView } from "./views/Home";
 import { WorkersView } from "./views/Workers";
 import { ReportsView } from "./views/Reports";
 import { getSessionUserData, isAdmin, logout } from "../statics/core/utils";
+import { getWorkers } from "./services/WorkerServices";
 
 export const AppPage = () => {
   const [view, setView] = useState(HomeView);
 
+  const [workerData, setWorkerData] = useState([]);
+
   const ref = useRef();
 
   const { username, placerole } = getSessionUserData();
+
+  useEffect(() => {
+    getDataWorkerView();
+  }, []);
+
+  const getDataWorkerView = async () => {
+    const data = await getWorkers();
+    setWorkerData(data);
+  };
 
   return (
     <main className="app">
@@ -40,7 +52,12 @@ export const AppPage = () => {
                 <BiHomeAlt2 />
                 <span>Home</span>
               </div>
-              <div onClick={() => setView(WorkersView)} className="item">
+              <div
+                onClick={() =>
+                  setView(<WorkersView workersInformation={workerData} />)
+                }
+                className="item"
+              >
                 <LiaUsersSolid />
                 <span>Workers</span>
               </div>
