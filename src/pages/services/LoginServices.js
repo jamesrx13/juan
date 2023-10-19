@@ -13,8 +13,6 @@ const login = (formEvt) => {
 
   request("POST", API_MAIN_URL + "login/", dataObj)
     .then((resp) => {
-      console.log(resp);
-      return;
       localStorage.setItem(AUTH_JWT_NAME, resp.token);
       resp.token = undefined;
       localStorage.setItem(USER_SESSION_NAME, JSON.stringify(resp));

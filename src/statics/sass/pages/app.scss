@@ -180,7 +180,8 @@ main.app {
 
             .workers-list {
                 width: 100%;
-                max-height: 100vh;
+                padding: 10px;
+                max-height: calc(100vh - 100px);
                 overflow-y: auto;
                 overflow-x: hidden;
                 padding-bottom: 500px;
@@ -189,6 +190,13 @@ main.app {
                 grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
                 gap: 20px;
 
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
             }
 
             .worker-card {
@@ -196,8 +204,70 @@ main.app {
                 height: 150px;
                 background-color: white;
                 border-radius: 8px;
-                padding: 20px;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                transition: .5s;
+
+                >.image {
+                    width: 50px;
+                    height: 50px;
+                    min-height: 50px;
+                    border-radius: 50%;
+                    background-color: #4d5dba27;
+                    display: grid;
+                    place-content: center;
+
+                    >svg {
+                        path {
+                            fill: $mainColor;
+                        }
+                    }
+                }
+
+                ul {
+                    list-style: none;
+
+                    li {
+                        font-size: 15px;
+
+                        span {
+                            font-weight: bold;
+                            color: $mainColor;
+                        }
+                    }
+                }
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+
             }
         }
+
+    }
+
+    .logout-modal {
+        button {
+            width: 100px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background-color: $secondaryColor;
+            color: white;
+            cursor: pointer;
+
+            &.yes {
+                background-color: $mainColor;
+                margin-right: 10px;
+            }
+
+        }
+
+
     }
 }
