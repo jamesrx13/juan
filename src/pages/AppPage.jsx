@@ -10,9 +10,12 @@ import { LiaUsersSolid } from "react-icons/lia";
 import { HomeView } from "./views/Home";
 import { WorkersView } from "./views/Workers";
 import { ReportsView } from "./views/Reports";
+import { getSessionUserData, isAdmin, logout } from "../statics/core/utils";
 
 export const AppPage = () => {
   const [view, setView] = useState(HomeView);
+
+  const { username, placerole } = getSessionUserData();
 
   return (
     <main className="app">
@@ -21,23 +24,32 @@ export const AppPage = () => {
           <div className="image-content">
             <AiOutlineUser />
           </div>
-          <span>Juan Esteban Bueno Murillo</span>
+          <div className="info">
+            <span>{username}</span>
+            <small>{placerole}</small>
+          </div>
         </div>
         <div className="options">
-          <div onClick={() => setView(HomeView)} className="item">
-            <BiHomeAlt2 />
-            <span>Home</span>
-          </div>
-          <div onClick={() => setView(WorkersView)} className="item">
-            <LiaUsersSolid />
-            <span>Workers</span>
-          </div>
-          <div onClick={() => setView(ReportsView)} className="item">
-            <AiOutlineBarChart />
-            <span>Reports</span>
-          </div>
+          {isAdmin() ? (
+            <>
+              <div onClick={() => setView(HomeView)} className="item">
+                <BiHomeAlt2 />
+                <span>Home</span>
+              </div>
+              <div onClick={() => setView(WorkersView)} className="item">
+                <LiaUsersSolid />
+                <span>Workers</span>
+              </div>
+              <div onClick={() => setView(ReportsView)} className="item">
+                <AiOutlineBarChart />
+                <span>Reports</span>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
-        <div className="logout">
+        <div className="logout" onClick={logout}>
           <RxExit />
           <span>Logout</span>
         </div>

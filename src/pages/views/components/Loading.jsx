@@ -9,7 +9,7 @@ export const LoadingComponent = ({ fullScreen }) => {
         height={100}
         width={100}
         radius={5}
-        color="#4fa94d"
+        color="#4d5dba"
         ariaLabel="ball-triangle-loading"
         wrapperClass={{}}
         wrapperStyle=""
