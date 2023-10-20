@@ -39,7 +39,10 @@ export const AppPage = () => {
                 <BiHomeAlt2 />
                 <span>Home</span>
               </div>
-              <div onClick={() => setView(<WorkersView />)} className="item">
+              <div
+                onClick={() => setView(<WorkersView setView={setView} />)}
+                className="item"
+              >
                 <LiaUsersSolid />
                 <span>Workers</span>
               </div>
