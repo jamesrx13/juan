@@ -1,5 +1,5 @@
 import React from "react";
 
 export const ReportsView = () => {
-  return <div>Reports view (●'◡'●)</div>;
+  return <div>Reports view (●'◡'●) perrones</div>;
 };
