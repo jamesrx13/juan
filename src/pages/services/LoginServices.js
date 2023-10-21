@@ -7,28 +7,31 @@ import {
 } from "../../statics/core/config";
 import { request } from "../../statics/core/utils";
 
-const login = (formEvt, setLoginStatus = () => {}) => {
+const login = (formEvt, setLoginStatus = () => { }) => {
   formEvt.preventDefault();
   const dataObj = Object.fromEntries(new FormData(formEvt.target));
   setLoginStatus(true);
 
-  request("POST", API_MAIN_URL + "login/", dataObj)
+  const respuesta = request("POST", API_MAIN_URL + "login/", dataObj)
     .then((resp) => {
       localStorage.setItem(AUTH_JWT_NAME, resp.token);
       resp.token = undefined;
       localStorage.setItem(USER_SESSION_NAME, JSON.stringify(resp));
       window.dispatchEvent(new Event(AUTH_EVENT));
       toast.success("Login successful");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
+      return true;
     })
     .catch((err) => {
       toast.error(err.message);
+      return false;
     })
     .finally(() => {
       setLoginStatus(false);
     });
+
+  return respuesta
 };
+
+
 
 export { login };

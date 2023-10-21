@@ -7,6 +7,8 @@ function ProtectedRoute({ children }) {
 
     if (!authResult) return <Navigate to="/login" />;
 
+
+
     return <>{children}</>;
 }
 

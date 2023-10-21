@@ -8,11 +8,19 @@ import { inputFocus } from "./logic/Inputs";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { CiMail } from "react-icons/ci";
 import { Box, CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const [viewPass, setViewPass] = useState("password");
 
   const [authState, setAuthState] = useState(false);
+
+
+  const handleSubmit = async (e) => {
+    const resp = await login(e, setAuthState);
+    resp && navigate("/");
+  }
 
   return (
     <main className="login">
@@ -22,7 +30,7 @@ export const LoginPage = () => {
           <span>Insert your email and password to login</span>
         </div>
 
-        <form onSubmit={(e) => login(e, setAuthState)} method="POST">
+        <form onSubmit={handleSubmit} method="POST">
           <div className="input-grup">
             <label htmlFor="email">Email</label>
             <div className="input-icon">

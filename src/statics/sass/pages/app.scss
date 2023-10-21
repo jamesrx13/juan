@@ -173,10 +173,16 @@ main.app {
 
         >.workers-view {
             width: 100%;
+            
+            div{
+                display: flex;
+                justify-content: space-between;
+                h1 {
+                    color: $mainColor;
+                }
 
-            h1 {
-                color: $mainColor;
             }
+
 
             .workers-list {
                 width: 100%;
@@ -197,6 +203,7 @@ main.app {
                 &::-webkit-scrollbar {
                     display: none;
                 }
+                
 
             }
 
@@ -251,7 +258,16 @@ main.app {
         }
 
         >.worker-details-view {
-            >.head {
+             >.head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                >h1 {
+                    text-align: center;
+                }
+                
+
                 >button {
                     width: 100px;
                     background-color: $secondaryColor;
