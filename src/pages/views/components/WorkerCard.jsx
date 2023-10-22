@@ -27,6 +27,9 @@ export const WorkerCard = ({ worker, setView }) => {
         <li>
           <span>Username:</span> {worker.username}
         </li>
+        <li>
+          <span>Staus:</span> {worker.placeStatus}
+        </li>
       </ul>
     </div>
   );

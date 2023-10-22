@@ -3,23 +3,19 @@ import { useState } from "react";
 import { WorkersView } from "./Workers";
 import { BiArrowBack } from "react-icons/bi";
 import Calendar from "./components/Calendar";
-import Switch from '@mui/material/Switch';
+import Switch from "@mui/material/Switch";
 import { UpdateWorkers } from "../services/WorkerServices";
 
 export const WorkerDetails = ({ workerData, setView }) => {
-  const [checked, setChecked] = useState(workerData.status === 1 ? true : false);
-
+  const [checked, setChecked] = useState(
+    workerData.status === 1 ? true : false
+  );
 
   const handleChange = async (formEvt) => {
     setChecked(formEvt.target.checked);
-    const dataObj = {
-      id: workerData._id,
-      status: formEvt.target.checked ? 1 : 0
-    }
-
-    const response = await UpdateWorkers(dataObj)
+    workerData.status = formEvt.target.checked ? 1 : 0;
+    const response = await UpdateWorkers(workerData);
     console.log(response);
-
   };
 
   console.log(checked);
@@ -32,11 +28,15 @@ export const WorkerDetails = ({ workerData, setView }) => {
           <BiArrowBack />
           Back
         </button>
-        <h1>{workerData.name?.toUpperCase() + " " + workerData.lastname?.toUpperCase()}  </h1>
+        <h1>
+          {workerData.name?.toUpperCase() +
+            " " +
+            workerData.lastname?.toUpperCase()}{" "}
+        </h1>
         <Switch
           checked={checked}
           onClick={handleChange}
-          inputProps={{ 'aria-label': 'controlled' }}
+          inputProps={{ "aria-label": "controlled" }}
           name="status"
         />
       </div>
