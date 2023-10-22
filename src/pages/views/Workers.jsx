@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 
 import { WorkerCard } from "./components/WorkerCard";
 
-import { getWorkers } from "../services/WorkerServices";
+
+import { CreateWorkers, getWorkers } from "../services/WorkerServices";
 import { LoadingComponent } from "./components/Loading";
 import { WorkerDetails } from "./WorkerDetails";
 
@@ -14,7 +15,10 @@ import {
   Button,
   Box,
   TextField,
+  FormControl
 } from "@mui/material";
+
+
 
 export const WorkersView = ({ setView }) => {
   const [data, setData] = useState([]);
@@ -77,17 +81,20 @@ export const WorkersView = ({ setView }) => {
               <Typography id="transition-modal-title" variant="h6" component="h2">
                 Register User
               </Typography>
-              <TextField label="Nombre" fullWidth sx={{ mb: 2 }} />
-              <TextField label="Apellido" fullWidth sx={{ mb: 2 }} />
-              <TextField label="Nombre de usuario" fullWidth sx={{ mb: 2 }} />
-              <TextField label="Contraseña" type="password" fullWidth sx={{ mb: 2 }} />
-              <TextField type="date" fullWidth sx={{ mb: 2 }} />
-              <TextField label="Email" type="email" fullWidth sx={{ mb: 2 }} />
-              <TextField label="Salario" type="number" fullWidth sx={{ mb: 2 }} />
-
-              <Button variant="contained" sx={{ mt: 2 }}>
-                Save
-              </Button>
+              <FormControl>
+                <form method="POST" onSubmit={CreateWorkers} >
+                  <TextField name="name" label="Nombre" fullWidth sx={{ mb: 2 }} />
+                  <TextField name="lastname" label="Apellido" fullWidth sx={{ mb: 2 }} />
+                  <TextField name="username" label="Nombre de usuario" fullWidth sx={{ mb: 2 }} />
+                  <TextField name="password" label="Contraseña" type="password" fullWidth sx={{ mb: 2 }} />
+                  <TextField name="date" type="date" fullWidth sx={{ mb: 2 }} />
+                  <TextField name="email" label="Email" type="email" fullWidth sx={{ mb: 2 }} />
+                  <TextField name="salary" label="Salario" type="number" fullWidth sx={{ mb: 2 }} />
+                  <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+                    Save
+                  </Button>
+                </form>
+              </FormControl>
             </Box>
           </Fade>
         </Modal>

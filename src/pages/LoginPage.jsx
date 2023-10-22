@@ -18,8 +18,11 @@ export const LoginPage = () => {
 
 
   const handleSubmit = async (e) => {
-    const resp = await login(e, setAuthState);
+    setAuthState(true);
+    const resp = await login(e);
+    setAuthState(false);
     resp && navigate("/");
+
   }
 
   return (

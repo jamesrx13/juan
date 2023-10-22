@@ -7,11 +7,9 @@ import {
 } from "../../statics/core/config";
 import { request } from "../../statics/core/utils";
 
-const login = (formEvt, setLoginStatus = () => { }) => {
+const login = (formEvt) => {
   formEvt.preventDefault();
   const dataObj = Object.fromEntries(new FormData(formEvt.target));
-  setLoginStatus(true);
-
   const respuesta = request("POST", API_MAIN_URL + "login/", dataObj)
     .then((resp) => {
       localStorage.setItem(AUTH_JWT_NAME, resp.token);
@@ -24,9 +22,6 @@ const login = (formEvt, setLoginStatus = () => { }) => {
     .catch((err) => {
       toast.error(err.message);
       return false;
-    })
-    .finally(() => {
-      setLoginStatus(false);
     });
 
   return respuesta

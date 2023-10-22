@@ -57,7 +57,7 @@ const Calendar = () => {
         setShowModal(false);
     };
 
-    console.log(days);
+
 
     const start = "2023-01-01";
     const end = "2023-01-31";

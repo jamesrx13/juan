@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import "../statics/css/pages/app.css";
-import { AiOutlineUser, AiOutlineBarChart } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineBarChart, AiOutlineSetting } from "react-icons/ai";
 import { RxExit } from "react-icons/rx";
 import { BiHomeAlt2 } from "react-icons/bi";
 import { LiaUsersSolid } from "react-icons/lia";
@@ -10,6 +10,8 @@ import { WorkersView } from "./views/Workers";
 import { ReportsView } from "./views/Reports";
 import { getSessionUserData, isAdmin, logout } from "../statics/core/utils";
 import { useNavigate } from "react-router-dom";
+import Config from "./views/config";
+
 
 export const AppPage = () => {
   const [view, setView] = useState(HomeView);
@@ -49,6 +51,10 @@ export const AppPage = () => {
               <div onClick={() => setView(<ReportsView />)} className="item">
                 <AiOutlineBarChart />
                 <span>Reports</span>
+              </div>
+              <div onClick={() => setView(<Config />)} className="item">
+                <AiOutlineSetting />
+                <span>Config</span>
               </div>
             </>
           ) : (
