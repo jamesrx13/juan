@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -15,8 +15,12 @@ import {
     Modal,
     TextField,
 } from "@mui/material";
+import { getConcepts } from "../services/ConceptsServices";
 function Config() {
     const [open, setOpen] = useState(false);
+
+    const [data, setData] = useState([]);
+    const [edit, setEdit] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -32,6 +36,19 @@ function Config() {
         boxShadow: 24,
         p: 4,
     };
+
+    useEffect(() => {
+        getConcepts().then((res) => {
+            setData(res);
+        });
+    }, []);
+
+    console.log(data);
+
+    const handleEdit = (e) => {
+        e.preventDefault();
+        setEdit(!edit);
+    }
 
     return (
         <>
@@ -51,7 +68,9 @@ function Config() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" onClick={handleOpen} >Abrir</Button>
+                            <Button size="small" onClick={handleOpen}>
+                                Abrir
+                            </Button>
                         </CardActions>
                     </Card>
                     <Card sx={{ width: 350 }}>
@@ -93,41 +112,30 @@ function Config() {
                         </Typography>
                         <FormControl>
                             <form method="POST">
-                                <TextField
-                                    name="nocturno"
-                                    label="Recargo Nocturno"
-                                    type="number"
-                                    sx={{ mb: 2 }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                                    }}
-                                    fullWidth
-                                />
-
-                                <TextField
-                                    name="festivo"
-                                    label="Recargo Festivo"
-                                    type="number"
-                                    sx={{ mb: 2 }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                                    }}
-                                    fullWidth
-                                />
-
-                                <TextField
-                                    name="dominical"
-                                    label="Recargo Dominical"
-                                    type="number"
-                                    sx={{ mb: 2 }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                                    }}
-                                    fullWidth
-                                />
+                                {data.map((item) => (
+                                    <>
+                                        <TextField
+                                            label={item.conceptstitle}
+                                            type="number"
+                                            name={item.conceptstitle}
+                                            value={item.propertyconcept}
+                                            sx={{ mb: 2 }}
+                                            disabled={edit ? false : true}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end">%</InputAdornment>
+                                                ),
+                                            }}
+                                            fullWidth
+                                        />
+                                    </>
+                                ))}
 
                                 <Button type="submit" variant="contained" sx={{ mt: 2 }}>
                                     Save
+                                </Button>
+                                <Button type="submit" onClick={handleEdit} color="secondary" variant={edit ? "contained" : "outlined"} sx={{ mt: 2 }}>
+                                    edit
                                 </Button>
                             </form>
                         </FormControl>
