@@ -118,7 +118,7 @@ function Config() {
                                             label={item.conceptstitle}
                                             type="number"
                                             name={item.conceptstitle}
-                                            value={item.propertyconcept}
+                                            value={!edit ? item.propertyconcept : ""}
                                             sx={{ mb: 2 }}
                                             disabled={edit ? false : true}
                                             InputProps={{

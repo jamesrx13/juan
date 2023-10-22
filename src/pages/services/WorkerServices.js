@@ -26,6 +26,8 @@ const CreateWorkers = (formEvt) => {
 const UpdateWorkers = (formEvt) => {
   const dataObj = Object.fromEntries(new FormData(formEvt.target));
   const data = Object.keys(dataObj).length === 0 ? formEvt : dataObj;
+
+  console.log(data);
   const response = request("PUT", API_MAIN_URL + `update/${data.id}`, data)
     .then((resp) => {
       toast.success("Status updated");

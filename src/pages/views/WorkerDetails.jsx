@@ -13,8 +13,13 @@ export const WorkerDetails = ({ workerData, setView }) => {
 
   const handleChange = async (formEvt) => {
     setChecked(formEvt.target.checked);
-    workerData.status = formEvt.target.checked ? 1 : 0;
-    const response = await UpdateWorkers(workerData);
+
+    const data = {
+      _id: workerData._id,
+      status: formEvt.target.checked ? 1 : 0,
+    }
+
+    const response = await UpdateWorkers(data);
     console.log(response);
   };
 

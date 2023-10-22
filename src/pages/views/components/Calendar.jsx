@@ -48,10 +48,33 @@ const Calendar = () => {
     console.log(date.startsWith("Sun") || date.startsWith("Sat"));
 
     if (fechaencontrada) {
+      setDaysData(prevState => ({
+        ...prevState,
+        isHoliday: true
+      }));
+    } else {
+      setDaysData(prevState => ({
+        ...prevState,
+        isHoliday: false
+      }));
     }
+
+    if (date.startsWith("Sun") || date.startsWith("Sat")) {
+      setDaysData(prevState => ({
+        ...prevState,
+        isWeekend: true
+      }));
+    } else {
+      setDaysData(prevState => ({
+        ...prevState,
+        isWeekend: false
+      }));
+    }
+
 
     setShowModal(true);
   };
+  console.log(daysData.isHoliday);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -70,8 +93,8 @@ const Calendar = () => {
     setShowModal(false);
   };
 
-  const start = "2023-01-01";
-  const end = "2023-01-31";
+  // const start = "2023-01-01";
+  // const end = "2023-01-31";
 
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5],
@@ -99,14 +122,14 @@ const Calendar = () => {
         editable={true}
         selectable={true}
         // initialDate={start}
-        validRange={
-          {
-            //   start: start,
-            //   end: `${end.split("-")[0]}-${end.split("-")[1]}-${
-            //     parseInt(end.split("-")[2]) + 1
-            //   }`,
-          }
-        }
+        // validRange={
+        //   {
+        //       start: start,
+        //       end: `${end.split("-")[0]}-${end.split("-")[1]}-${
+        //         parseInt(end.split("-")[2]) + 1
+        //       }`,
+        //   }
+        // }
         businessHours={businessHours}
         events={days.map((day) => {
           return {
