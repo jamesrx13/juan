@@ -140,6 +140,8 @@ const Calendar = ({ workerData }) => {
       });
   };
 
+  console.log(workerData);
+
 
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5],
@@ -202,10 +204,10 @@ const Calendar = ({ workerData }) => {
               align="center"
             >
               {daysData.isHoliday
-                ? "Did Juan work this holiday?"
+                ? `Did ${workerData.name} work this holiday?`
                 : daysData.isWeekend
-                  ? "Did Juan work this day of the weekend?"
-                  : "Didn't Juan work this day?"}
+                  ? `Did ${workerData.name} work this day of the weekend?`
+                  : `Didn't ${workerData.name} work this day?`}
               <br /> <br />
               <Button
                 component="label"

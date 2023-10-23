@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { WorkersView } from "./Workers";
 import { BiArrowBack } from "react-icons/bi";
 import Calendar from "./components/Calendar";
@@ -69,19 +69,23 @@ export const WorkerDetails = ({ workerData, setView }) => {
             " " +
             workerData.lastname?.toUpperCase()}{" "}
         </h1>
-        <Switch
-          checked={checked}
-          onClick={handleChange}
-          inputProps={{ "aria-label": "controlled" }}
-          name="status"
-        />
-        <button onClick={() => clickdelete(workerData._id)}>
-          Delete
-        </button>
 
-        <button onClick={handleOpen}>
-          Actualizar
-        </button>
+        <div>
+
+          <Button style={{ backgroundColor: "red" }} variant="contained" onClick={() => clickdelete(workerData._id)}>
+            Delete
+          </Button>
+
+          <Button style={{ backgroundColor: "green" }} color="success" variant="contained" onClick={handleOpen}>
+            Actualizar
+          </Button>
+          <Switch
+            checked={checked}
+            onClick={handleChange}
+            inputProps={{ "aria-label": "controlled" }}
+            name="status"
+          />
+        </div>
       </div>
       <br />
       <section>
