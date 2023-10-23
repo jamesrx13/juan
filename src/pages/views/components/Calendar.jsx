@@ -11,9 +11,8 @@ import { toast } from "react-toastify";
 
 const Calendar = ({ workerData }) => {
   const [days, setDays] = useState([]);
+  const [events, setevents] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTitle, setSelectedTitle] = useState("");
-  const [selectedColor, setSelectedColor] = useState("blue"); // Color predeterminado
   const [showModal, setShowModal] = useState(false);
   const [daysData, setDaysData] = useState({
     isHoliday: false, //Feriado
@@ -29,7 +28,10 @@ const Calendar = ({ workerData }) => {
   };
 
   useEffect(() => {
-    Holidays().then((data) => setDays(data));
+    Holidays().then((data) => {
+      setDays(data);
+    });
+    getAllEventsByWorker();
   }, []);
 
   const handleDateClick = (arg) => {
@@ -67,7 +69,6 @@ const Calendar = ({ workerData }) => {
 
     setShowModal(true);
   };
-  console.log(daysData.isHoliday);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -82,12 +83,58 @@ const Calendar = ({ workerData }) => {
 
     request("POST", API_MAIN_URL + `works/`, data)
       .then((resp) => {
-        console.log(resp);
+        getAllEventsByWorker();
       })
       .catch((err) => toast.error(err.message))
       .finally(() => {
         setShowModal(false);
       });
+  };
+
+  const getAllEventsByWorker = () => {
+    request("GET", API_MAIN_URL + `works/${workerData._id}`)
+      .then((resp) => {
+        const newEvents = [];
+
+        console.log(resp);
+
+        resp.forEach((element) => {
+          const currentDate = new Date(element.workDate);
+
+          var month = currentDate.getMonth() + 1;
+          var day = currentDate.getDate() + 1;
+
+          element.workDate = `${currentDate.getFullYear()}-${
+            month < 10 ? "0" + month : month
+          }-${day < 10 ? "0" + day : day}`;
+
+          if (element.isHoliday) {
+            newEvents.push({
+              localName: "Worked holiday",
+              date: element.workDate,
+              color: "purple",
+            });
+            // return;
+          } else if (element.isWeekend) {
+            newEvents.push({
+              localName: "Worked weekend",
+              date: element.workDate,
+              color: "orange",
+            });
+            // return;
+          } else if (!element.isHoliday && !element.isWeekend) {
+            newEvents.push({
+              localName: "He didn't work this day",
+              date: element.workDate,
+              color: "red",
+            });
+          }
+        });
+
+        setevents(() => [...days, ...newEvents]);
+      })
+      .catch((err) => toast.error(err.message))
+      .finally(() => {});
   };
 
   // const start = "2023-01-01";
@@ -119,7 +166,7 @@ const Calendar = ({ workerData }) => {
         editable={true}
         selectable={true}
         businessHours={businessHours}
-        events={days.map((day) => {
+        events={events.map((day) => {
           return {
             title: day.localName,
             date: day.date,
