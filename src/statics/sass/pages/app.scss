@@ -322,6 +322,35 @@ main.app {
       }
     }
 
+    >.reports-view {
+      width: 100%;
+
+      >.head {
+        h1 {
+          color: $mainColor;
+        }
+      }
+
+      >.filters {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        >.MuiFormControl-root {
+          min-width: 200px;
+          width: calc(33% - 10px);
+        }
+      }
+
+      >.generated-report {
+        width: 100%;
+        text-align: end;
+      }
+    }
+
     // Scroll desing
     &::-webkit-scrollbar {
       -webkit-appearance: none;
