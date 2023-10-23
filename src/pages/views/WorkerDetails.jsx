@@ -17,7 +17,7 @@ export const WorkerDetails = ({ workerData, setView }) => {
     const data = {
       _id: workerData._id,
       status: formEvt.target.checked ? 1 : 0,
-    }
+    };
 
     const response = await UpdateWorkers(data);
     console.log(response);
@@ -46,7 +46,7 @@ export const WorkerDetails = ({ workerData, setView }) => {
         />
       </div>
       <br />
-      <section>{<Calendar />}</section>
+      <section>{<Calendar workerData={workerData} />}</section>
     </div>
   );
 };
