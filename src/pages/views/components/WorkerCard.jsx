@@ -1,4 +1,4 @@
-import {} from "react";
+import { } from "react";
 
 import { AiOutlineUser } from "react-icons/ai";
 import { WorkerDetails } from "../WorkerDetails";
@@ -28,7 +28,7 @@ export const WorkerCard = ({ worker, setView }) => {
           <span>Username:</span> {worker.username}
         </li>
         <li>
-          <span>Staus:</span> {worker.placeStatus}
+          <span>Status:</span> {worker.status ? "Active" : "Inactive"}
         </li>
       </ul>
     </div>

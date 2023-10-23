@@ -41,4 +41,20 @@ const UpdateWorkers = (formEvt) => {
   return response;
 };
 
-export { getWorkers, CreateWorkers, UpdateWorkers };
+const deleteWorker = async (id) => {
+  const response = request("DELETE", API_MAIN_URL + `delete/${id}`)
+    .then((resp) => {
+      toast.success("Worker deleted");
+      return true;
+    })
+    .catch((err) => {
+      toast.error(err.message);
+      return false;
+    });
+
+  return response;
+}
+
+
+
+export { getWorkers, CreateWorkers, UpdateWorkers, deleteWorker };

@@ -1,4 +1,5 @@
-import * as React from "react";
+/* eslint-disable react/prop-types */
+import { forwardRef, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,8 +12,9 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { AiOutlineClose } from "react-icons/ai";
+import { getConcepts } from "../../services/ConceptsServices";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
@@ -22,10 +24,44 @@ export default function FullScreenDialog({
   setReportModal,
   metaData,
 }) {
+
+  const [concept, setConcept] = useState([]);
+
+  useEffect(() => {
+    getConcepts().then((res) => {
+      setConcept(res);
+    });
+  }, []);
+
+
+
+
   const handleClose = () => {
     setReportModal(false);
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+
+  console.log(concept);
+
+
+
+
+  const baseSalary = parseInt(reportData[0]?.subTitle);
+  const daySalary = reportData[0]?.subTitle / 30;
+  const workedHolidaysAmount = (metaData.allHoliday * daySalary * concept[0]?.propertyconcept) + (metaData.allHoliday * daySalary);
+  const weekendWorkedAmount = (metaData.allWeekend * daySalary * concept[1]?.propertyconcept) + (metaData.allWeekend * daySalary);
+  const daysNotWorkedAmount = metaData.allNotWork * daySalary;
+
+  const totalSalary = baseSalary + workedHolidaysAmount + weekendWorkedAmount - daysNotWorkedAmount;
+
+  console.log(` ${baseSalary} + ${workedHolidaysAmount} + ${weekendWorkedAmount} - ${daysNotWorkedAmount} = ${totalSalary}`);
+
+
+  console.log(metaData);
   return (
     <div>
       <Dialog
@@ -47,7 +83,7 @@ export default function FullScreenDialog({
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Report
             </Typography>
-            <Button autoFocus color="inherit">
+            <Button onClick={handlePrint} className="no-print" autoFocus color="inherit">
               Print
             </Button>
           </Toolbar>
@@ -62,7 +98,7 @@ export default function FullScreenDialog({
               >
                 <ListItemText
                   primary={item.title}
-                  //   secondary={item.subTitle.toLocaleString()}
+                //   secondary={item.subTitle.toLocaleString()}
                 />
               </ListItem>
               <Divider />
@@ -71,26 +107,34 @@ export default function FullScreenDialog({
         </List>
         <br />
         <div className="information" style={{ marginInline: "20px" }}>
-          <h2>Base salary: ${reportData[0]?.subTitle.toLocaleString()}</h2>
-          <h3>Day salary: ${reportData[0]?.subTitle / 30} </h3>
+          <h2>Base salary: ${baseSalary}</h2>
+          <h3>Day salary: ${daySalary} </h3>
           <h3>
             Worked holidays: {metaData.allHoliday}
             <small style={{ color: "green" }}>
-              +{(reportData[0]?.subTitle / 30) * 0.75 * metaData.allHoliday}
+              +{workedHolidaysAmount}
             </small>
           </h3>
           <h3>
             Weekend worked: {metaData.allWeekend}
             <small style={{ color: "green" }}>
-              +{(reportData[0]?.subTitle / 30) * 0.75 * metaData.allWeekend}
+              +{weekendWorkedAmount}
             </small>
           </h3>
           <h3>
             Days not worked: {metaData.allNotWork}{" "}
             <small style={{ color: "red" }}>
-              -{(reportData[0]?.subTitle / 30) * metaData.allNotWork}
+              -{daysNotWorkedAmount}
             </small>
           </h3>
+
+          <h1>
+            Total salary:
+            <small style={{ color: "green" }}>
+              {totalSalary}
+
+            </small>
+          </h1>
         </div>
         <br />
       </Dialog>

@@ -61,7 +61,7 @@ function Config() {
         const data = {
             _id: selectedConceptID,
             conceptstitle: selectedConcept,
-            propertyconcept: parseInt(selectedPercentage)
+            propertyconcept: parseFloat(selectedPercentage)
         };
 
         const respuesta = updateConcepts(data);
@@ -94,7 +94,7 @@ function Config() {
     return (
         <>
             <div className="config_view">
-                <h1>CONCEPTOS NOMINA</h1>
+                <h1>CONCEPTOS</h1>
                 <div className="card_config">
                     <Card sx={{ width: 350 }}>
                         <CardMedia sx={{ height: 100 }} title="Dollar Icon">
@@ -105,7 +105,7 @@ function Config() {
                                 Conceptos
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                Horas y sueldo por conceptos
+                                Coneptos de horas
                             </Typography>
                         </CardContent>
                         <CardActions>

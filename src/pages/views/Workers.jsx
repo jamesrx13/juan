@@ -5,7 +5,6 @@ import { WorkerCard } from "./components/WorkerCard";
 
 import { CreateWorkers, getWorkers } from "../services/WorkerServices";
 import { LoadingComponent } from "./components/Loading";
-import { WorkerDetails } from "./WorkerDetails";
 
 import {
   Modal,
@@ -46,6 +45,16 @@ export const WorkersView = ({ setView }) => {
     p: 4,
   };
 
+
+  const clicksave = async (e) => {
+    e.preventDefault();
+    const response = await CreateWorkers(e);
+    handleClose();
+  }
+
+
+
+
   return (
     <section className="workers-view">
       <div>
@@ -82,7 +91,7 @@ export const WorkersView = ({ setView }) => {
                 Register User
               </Typography>
               <FormControl>
-                <form method="POST" onSubmit={CreateWorkers} >
+                <form method="POST" onSubmit={clicksave} >
                   <TextField name="name" label="Nombre" fullWidth sx={{ mb: 2 }} />
                   <TextField name="lastname" label="Apellido" fullWidth sx={{ mb: 2 }} />
                   <TextField name="username" label="Nombre de usuario" fullWidth sx={{ mb: 2 }} />

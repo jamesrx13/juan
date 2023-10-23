@@ -10,7 +10,7 @@ import { WorkersView } from "./views/Workers";
 import { ReportsView } from "./views/Reports";
 import { getSessionUserData, isAdmin, logout } from "../statics/core/utils";
 import { useNavigate } from "react-router-dom";
-import Config from "./views/config";
+import Config from "./views/Config";
 
 
 export const AppPage = () => {

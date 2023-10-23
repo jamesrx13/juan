@@ -38,14 +38,14 @@ export const ReportsView = () => {
       request(
         "GET",
         API_MAIN_URL +
-          "works/" +
-          "?workerId=" +
-          workerValue._id +
-          "&workDate=" +
-          yearValue +
-          "-" +
-          monthValue +
-          "-02",
+        "works/" +
+        "?workerId=" +
+        workerValue._id +
+        "&workDate=" +
+        yearValue +
+        "-" +
+        monthValue +
+        "-02",
         {}
       ).then((resp) => {
         dataProcess(resp);
