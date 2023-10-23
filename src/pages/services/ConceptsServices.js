@@ -9,10 +9,11 @@ const getConcepts = async () => {
 
 
 const updateConcepts = async (formEvt) => {
+    console.log(formEvt);
     const dataObj = Object.fromEntries(new FormData(formEvt.target));
     const data = Object.keys(dataObj).length === 0 ? formEvt : dataObj
     console.log(data);
-    const response = request("PUT", API_MAIN_URL + `update/${data.id}`, data).then((resp) => {
+    const response = await request("PUT", API_MAIN_URL + `concepts/${data._id}`, data).then((resp) => {
         toast.success("Status updated");
         return resp;
     }).catch((err) => {
@@ -25,4 +26,4 @@ const updateConcepts = async (formEvt) => {
 
 
 
-export { getConcepts };
+export { getConcepts, updateConcepts };

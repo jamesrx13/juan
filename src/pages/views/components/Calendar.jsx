@@ -62,12 +62,10 @@ const Calendar = ({ workerData }) => {
         }
       });
 
-      // Combinar días festivos y eventos del trabajador
       const combinedEvents = [...holidaysData, ...newEvents];
 
       setIsLoading(false);
 
-      // Establecer los datos cargados
       setDays(holidaysData);
       setEvents(combinedEvents);
     };

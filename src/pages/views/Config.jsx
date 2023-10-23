@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { AiOutlineDollarCircle, AiOutlineTool } from "react-icons/ai";
+import { AiOutlineDollarCircle } from "react-icons/ai";
 import {
     Backdrop,
     Box,
@@ -13,14 +13,18 @@ import {
     FormControl,
     InputAdornment,
     Modal,
+    Select,
+    MenuItem,
     TextField,
 } from "@mui/material";
-import { getConcepts } from "../services/ConceptsServices";
+import { getConcepts, updateConcepts } from "../services/ConceptsServices";
 function Config() {
     const [open, setOpen] = useState(false);
-
     const [data, setData] = useState([]);
     const [edit, setEdit] = useState(false);
+    const [selectedConcept, setSelectedConcept] = useState('');
+    const [selectedConceptID, setSelectedConceptID] = useState('');
+    const [selectedPercentage, setSelectedPercentage] = useState('');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -50,6 +54,43 @@ function Config() {
         setEdit(!edit);
     }
 
+    const handleSave = (e) => {
+        e.preventDefault();
+        // Aquí puedes guardar el valor seleccionado en 'selectedConceptID'
+
+        const data = {
+            _id: selectedConceptID,
+            conceptstitle: selectedConcept,
+            propertyconcept: parseInt(selectedPercentage)
+        };
+
+        const respuesta = updateConcepts(data);
+
+        console.log(respuesta);
+
+        console.log(data);
+    }
+
+
+    const handleConceptChange = (e) => {
+        const selectedConceptValue = e.target.value;
+        setSelectedConcept(selectedConceptValue);
+
+        // Buscar el concepto seleccionado en los datos
+        const conceptData = data.find((item) => item.conceptstitle === selectedConceptValue);
+
+        // Si se encuentra el concepto, establecer el ID y el porcentaje
+        if (conceptData) {
+            setSelectedConceptID(conceptData._id);
+            setSelectedPercentage(conceptData.propertyconcept);
+        } else {
+            setSelectedConceptID('');
+            setSelectedPercentage(''); // Limpiar los valores si no se encuentra el concepto
+        }
+    };
+
+    console.log(selectedPercentage);
+
     return (
         <>
             <div className="config_view">
@@ -71,22 +112,6 @@ function Config() {
                             <Button size="small" onClick={handleOpen}>
                                 Abrir
                             </Button>
-                        </CardActions>
-                    </Card>
-                    <Card sx={{ width: 350 }}>
-                        <CardMedia sx={{ height: 100 }} title="Dollar Icon">
-                            <AiOutlineTool size={100} />
-                        </CardMedia>
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="div">
-                                Deducciones
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Dedicciones por conceptos
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Abrir</Button>
                         </CardActions>
                     </Card>
                 </div>
@@ -112,30 +137,47 @@ function Config() {
                         </Typography>
                         <FormControl>
                             <form method="POST">
-                                {data.map((item) => (
-                                    <>
-                                        <TextField
-                                            label={item.conceptstitle}
-                                            type="number"
-                                            name={item.conceptstitle}
-                                            value={!edit ? item.propertyconcept : ""}
-                                            sx={{ mb: 2 }}
-                                            disabled={edit ? false : true}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">%</InputAdornment>
-                                                ),
-                                            }}
-                                            fullWidth
-                                        />
-                                    </>
-                                ))}
+                                <TextField
+                                    label="ID del Concepto"
+                                    value={selectedConceptID}
+                                    sx={{ mb: 2 }}
+                                    fullWidth
+                                    disabled
+                                />
+                                <Select
+                                    value={selectedConcept}
+                                    onChange={handleConceptChange}
+                                    sx={{ mb: 2 }}
+                                    fullWidth
+                                    disabled={!edit}
+                                >
+                                    <MenuItem value="">Selecciona un concepto</MenuItem>
+                                    {data.map((item) => (
+                                        <MenuItem key={item._id} value={item.conceptstitle}>
+                                            {item.conceptstitle}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
 
-                                <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+                                <TextField
+                                    label="% Porcentaje"
+                                    sx={{ mb: 2 }}
+                                    fullWidth
+                                    disabled={!edit}
+                                    onChange={(e) => setSelectedPercentage(e.target.value)}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">{selectedPercentage}%</InputAdornment>
+                                        ),
+                                    }}
+
+                                />
+
+                                <Button type="submit" onClick={handleSave} variant="contained" sx={{ mt: 2 }}>
                                     Save
                                 </Button>
                                 <Button type="submit" onClick={handleEdit} color="secondary" variant={edit ? "contained" : "outlined"} sx={{ mt: 2 }}>
-                                    edit
+                                    Edit
                                 </Button>
                             </form>
                         </FormControl>
