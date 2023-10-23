@@ -10,38 +10,76 @@ import { API_MAIN_URL } from "../../../statics/core/config";
 import { toast } from "react-toastify";
 
 const Calendar = ({ workerData }) => {
-  const [days, setDays] = useState([]);
-  const [events, setevents] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [daysData, setDaysData] = useState({
-    isHoliday: false, //Feriado
-    isWeekend: false, //Fin de semana
+    isHoliday: false,
+    isWeekend: false,
   });
 
-  const Holidays = async () => {
-    const response = await fetch(
-      "https://date.nager.at/api/v3/PublicHolidays/2023/CO"
-    );
-    const data = await response.json();
-    return data;
-  };
+  const [days, setDays] = useState([]);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    Holidays().then((data) => {
-      setDays(data);
-    });
-    getAllEventsByWorker();
-  }, []);
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      // Cargar días festivos
+      const holidaysResponse = await fetch(
+        "https://date.nager.at/api/v3/PublicHolidays/2023/CO"
+      );
+      const holidaysData = await holidaysResponse.json();
+
+      // Cargar eventos del trabajador
+      const eventsResponse = await request("GET", API_MAIN_URL + `works/${workerData._id}`);
+      const workerEvents = eventsResponse || [];
+
+      const newEvents = workerEvents.map((element) => {
+        const currentDate = new Date(element.workDate);
+        var month = currentDate.getMonth() + 1;
+        var day = currentDate.getDate() + 1;
+        element.workDate = `${currentDate.getFullYear()}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
+
+        if (element.isHoliday) {
+          return {
+            localName: "Worked holiday",
+            date: element.workDate,
+            color: "purple",
+          };
+        } else if (element.isWeekend) {
+          return {
+            localName: "Worked weekend",
+            date: element.workDate,
+            color: "orange",
+          };
+        } else {
+          return {
+            localName: "He didn't work this day",
+            date: element.workDate,
+            color: "red",
+          };
+        }
+      });
+
+      // Combinar días festivos y eventos del trabajador
+      const combinedEvents = [...holidaysData, ...newEvents];
+
+      setIsLoading(false);
+
+      // Establecer los datos cargados
+      setDays(holidaysData);
+      setEvents(combinedEvents);
+    };
+
+    fetchData();
+  }, [workerData]);
 
   const handleDateClick = (arg) => {
     setSelectedDate(arg.dateStr);
 
     const fechaencontrada = days.some((day) => day.date === arg.dateStr);
     const date = `${arg.date}`;
-
-    console.log(fechaencontrada ?? "no encontrado");
-    console.log(date.startsWith("Sun") || date.startsWith("Sat"));
 
     if (fechaencontrada) {
       setDaysData((prevState) => ({
@@ -83,7 +121,20 @@ const Calendar = ({ workerData }) => {
 
     request("POST", API_MAIN_URL + `works/`, data)
       .then((resp) => {
-        getAllEventsByWorker();
+        const newEvent = {
+          localName: daysData.isHoliday
+            ? "Worked holiday"
+            : daysData.isWeekend
+              ? "Worked weekend"
+              : "He didn't work this day",
+          date: selectedDate,
+          color: daysData.isHoliday
+            ? "purple"
+            : daysData.isWeekend
+              ? "orange"
+              : "red",
+        };
+        setEvents((prevEvents) => [...prevEvents, newEvent]);
       })
       .catch((err) => toast.error(err.message))
       .finally(() => {
@@ -91,54 +142,6 @@ const Calendar = ({ workerData }) => {
       });
   };
 
-  const getAllEventsByWorker = () => {
-    request("GET", API_MAIN_URL + `works/${workerData._id}`)
-      .then((resp) => {
-        const newEvents = [];
-
-        console.log(resp);
-
-        resp.forEach((element) => {
-          const currentDate = new Date(element.workDate);
-
-          var month = currentDate.getMonth() + 1;
-          var day = currentDate.getDate() + 1;
-
-          element.workDate = `${currentDate.getFullYear()}-${
-            month < 10 ? "0" + month : month
-          }-${day < 10 ? "0" + day : day}`;
-
-          if (element.isHoliday) {
-            newEvents.push({
-              localName: "Worked holiday",
-              date: element.workDate,
-              color: "purple",
-            });
-            // return;
-          } else if (element.isWeekend) {
-            newEvents.push({
-              localName: "Worked weekend",
-              date: element.workDate,
-              color: "orange",
-            });
-            // return;
-          } else if (!element.isHoliday && !element.isWeekend) {
-            newEvents.push({
-              localName: "He didn't work this day",
-              date: element.workDate,
-              color: "red",
-            });
-          }
-        });
-
-        setevents(() => [...days, ...newEvents]);
-      })
-      .catch((err) => toast.error(err.message))
-      .finally(() => {});
-  };
-
-  // const start = "2023-01-01";
-  // const end = "2023-01-31";
 
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5],
@@ -158,22 +161,26 @@ const Calendar = ({ workerData }) => {
 
   return (
     <>
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        dateClick={handleDateClick}
-        initialView="dayGridMonth"
-        locale={"es"}
-        editable={true}
-        selectable={true}
-        businessHours={businessHours}
-        events={events.map((day) => {
-          return {
-            title: day.localName,
-            date: day.date,
-            color: day.color || "blue",
-          };
-        })}
-      />
+      {isLoading ? (
+        <h1>Cargando...</h1>
+      ) : (
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          dateClick={handleDateClick}
+          initialView="dayGridMonth"
+          locale={"es"}
+          editable={true}
+          selectable={true}
+          businessHours={businessHours}
+          events={events.map((day) => {
+            return {
+              title: day.localName,
+              date: day.date,
+              color: day.color || "blue",
+            };
+          })}
+        />
+      )}
 
       <Modal
         open={showModal}
@@ -199,8 +206,8 @@ const Calendar = ({ workerData }) => {
               {daysData.isHoliday
                 ? "Did Juan work this holiday?"
                 : daysData.isWeekend
-                ? "Did Juan work this day of the weekend?"
-                : "Didn't Juan work this day?"}
+                  ? "Did Juan work this day of the weekend?"
+                  : "Didn't Juan work this day?"}
               <br /> <br />
               <Button
                 component="label"
